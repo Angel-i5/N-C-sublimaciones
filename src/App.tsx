@@ -31,7 +31,7 @@ interface Review {
   content: string;
   stars: number;
 }
-
+// reseñas de clientes
 const REVIEWS: Review[] = [
   { id: 1, name: "CARLOS R.", role: "Cliente Verificado", content: "La calidad de la taza es brutal, los colores neón resaltan muchísimo. ¡Recomendado!", stars: 5 },
   { id: 2, name: "ANA M.", role: "Emprendedora", content: "Sublimaron mi logo en unas franelas y quedaron perfectas. El trato fue de primera.", stars: 5 },
@@ -347,7 +347,7 @@ const CatalogPage = () => {
               <p className="text-slate-500 text-sm mb-8 leading-relaxed font-medium">{product.description}</p>
               <div className="flex items-center justify-between gap-4">
                 <span className="text-white font-black text-lg italic">{product.price}</span>
-                <a href={`${WA_URL}?text=Hola%20N&C%20Sublimaciones%2C%20quiero%20información%20sobre%3A%20${encodeURIComponent(product.name)}`} target="_blank" rel="noreferrer" className={`${btnWhatsApp} px-6 py-3 rounded-xl text-[10px] uppercase tracking-widest`}>
+                <a href={`${WA_URL}?text=Hola%20N-C%20Sublimaciones%2C%20quiero%20información%20sobre%3A%20${encodeURIComponent(product.name)}`} target="_blank" rel="noreferrer" className={`${btnWhatsApp} px-6 py-3 rounded-xl text-[10px] uppercase tracking-widest`}>
                   <MessageCircle className="w-4 h-4" /> Consultar
                 </a>
               </div>
