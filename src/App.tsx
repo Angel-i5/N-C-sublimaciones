@@ -52,11 +52,11 @@ interface Product {
 }
 // --- Season Configuration de coleccion ---
 const SEASON_CONFIG = {
-  title: "SAN VALENTÍN", // Título de la colección
+  title: "SEMANA SANTA", // Título de la colección
   accentColor: "purple", // colores dependiendo la caegoria 'red', 'rose', 'emerald'.
   image1: "/semana-santa/Rey de Paz.jpeg", 
   image2: "/semana-santa/semana santa.jpeg",
-  category: "san-valentín" // Categoría de los productos en esta colección
+  category: "semana santa" // Categoría de los productos en esta colección
 };
 
 // --- Data ---
