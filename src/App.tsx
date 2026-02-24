@@ -53,9 +53,9 @@ interface Product {
 // --- Season Configuration de coleccion ---
 const SEASON_CONFIG = {
   title: "SAN VALENTÍN", // Título de la colección
-  accentColor: "red", // colores dependiendo la caegoria 'red', 'rose', 'emerald', etc.
-  image1: "/san-valentin/tazas-san-valentin.jpeg",
-  image2: "/san-valentin/franelas-para-parejas.jpeg",
+  accentColor: "purple", // colores dependiendo la caegoria 'red', 'rose', 'emerald'.
+  image1: "/semana-santa/Rey de Paz.jpeg", 
+  image2: "/semana-santa/semana santa.jpeg",
   category: "san-valentín" // Categoría de los productos en esta colección
 };
 
@@ -103,6 +103,48 @@ const PRODUCTS: Product[] = [
     description: "Amor en cada sorbo.", 
     image:  "/san-valentin/taza-love.jpeg", 
     price: "Consultar" },
+    // semana santa
+  { id: 7,
+    name: " Franela Camino a la Gloria", 
+    category: 'semana santa', 
+    description: "Colección especial para la Semana Santa.", 
+    image: "/semana-santa/camino a la gloria.jpeg", 
+    price: "Consultar" },
+ 
+    { id: 8,
+    name: "El nazareno",  
+    category: 'semana santa',
+    description: "franela con diseño de la Semana Santa.",
+    image: "/semana-santa/el nazareno.jpeg",
+    price: "Consultar" },
+ 
+    { id: 9,
+    name: "Franela Semana Santa",
+    category: 'semana santa',
+    description: "Mirada de Fe.",
+    image: "/semana-santa/mirada de fe.jpeg",
+    price: "Consultar" },
+    
+    { id: 10,
+    name: "Colección Especial Semana Santa",
+    category: 'semana santa',
+    description: "Rey de Paz.",
+    image: "/semana-santa/Rey de Paz.jpeg",
+    price: "Consultar" },
+    
+    { id: 11,
+    name: "franela Sacrificio de Amor",
+    category: 'semana santa',
+    description: "Sacrificio de Amor.",
+    image: "/semana-santa/Sacrificio de Amor .jpeg",
+    price: "Consultar" },
+ 
+    { id: 12,
+    name: "Franela Semana Santa",
+    category: 'semana santa',
+    description: "Franela con diseño especial de Semana Santa.",
+    image: "/semana-santa/semana santa.jpeg",
+    price: "Consultar" },    
 
 ];
 
