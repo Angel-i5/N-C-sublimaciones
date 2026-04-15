@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ShoppingBag, 
   Send, 
@@ -23,7 +23,14 @@ import {
 const WA_NUMBER = "584262322394"; 
 const WA_URL = `https://wa.me/${WA_NUMBER}`;
 
-// --- Tipado para las reseñas ---
+// --- Imágenes del Carrusel ---
+const CAROUSEL_IMAGES = [
+  { id: 1, url: "/logos-NC/nc.jpeg", title: "nc sublimaciones" },
+  { id: 2, url: "/logos-NC/nc-tazas.jpeg", title: "nc tazas" },
+  { id: 3, url: "/logos-NC/regalos-unicos.jpeg", title: "regalos unicos" },
+];
+
+// --- Tipado y Datos ---
 interface Review {
   id: number;
   name: string;
@@ -31,14 +38,13 @@ interface Review {
   content: string;
   stars: number;
 }
-// reseñas de clientes
+
 const REVIEWS: Review[] = [
   { id: 1, name: "CARLOS R.", role: "Cliente Verificado", content: "La calidad de la taza es brutal, los colores neón resaltan muchísimo. ¡Recomendado!", stars: 5 },
   { id: 2, name: "ANA M.", role: "Emprendedora", content: "Sublimaron mi logo en unas franelas y quedaron perfectas. El trato fue de primera.", stars: 5 },
   { id: 3, name: "PEDRO J.", role: "Regalo Personalizado", content: "Diseño único. No he visto nada igual en otras tiendas de sublimación.", stars: 5 },
 ];
 
-// --- Types ---
 type Page = 'home' | 'catalog' | 'about';
 type Category = 'todas' | 'tazas' | 'camisetas' | 'especiales' | 'san-valentín' | 'semana santa'| ' calnaval';
 
@@ -50,105 +56,32 @@ interface Product {
   image: string;
   price: string;
 }
-// --- Season Configuration de coleccion ---
+
 const SEASON_CONFIG = {
-  title: "SEMANA SANTA", // Título de la colección
-  accentColor: "purple", // colores dependiendo la caegoria 'red', 'rose', 'emerald'.
+  title: "SEMANA SANTA",
+  accentColor: "purple",
   image1: "/semana-santa/Rey de Paz.jpeg", 
   image2: "/semana-santa/semana santa.jpeg",
-  category: "semana santa" // Categoría de los productos en esta colección
+  category: "semana santa"
 };
 
-// --- Data ---
 const PRODUCTS: Product[] = [
-  // san valentin
-  { id: 1, 
-    name: "Taza xoxo san valentín", 
-    category: 'tazas', 
-    description: "Perfecta para expresar amor con cada sorbo.", 
-    image: "/san-valentin/taza-xoxo.png", 
-    price: "Consultar" },
-
-  { id: 2, 
-    name: "franela san valentin", 
-    category: 'san-valentín', 
-    description: "lindos detalles.", 
-    image: "/san-valentin/franela-san-valentin.jpeg", 
-    price: "Consultar" },
-
-  { id: 3, 
-    name: "Tazas Cerámica san valentín", 
-    category: 'san-valentín', 
-    description: "Amor en cada sorbo.", 
-    image: "/san-valentin/tazas-san-valentin.jpeg",
-    price: "Consultar" },
-
-  { id: 4, 
-    name: "franelas para parejas", 
-    category: 'san-valentín', 
-    description: "Ideal para aprejas.", 
-    image: "/san-valentin/franelas-para-parejas.jpeg", 
-    price: "Consultar" },
-
-  { id: 5, 
-    name: "Colección san valentín", 
-    category: 'san-valentín', 
-    description: "Diseños exclusivos con estética.", 
-    image: "/san-valentin/franelas-para-parejas-2.jpeg", 
-    price: "Consultar" },
-
-  { id: 6, 
-    name: "Taza love", 
-    category: 'tazas', 
-    description: "Amor en cada sorbo.", 
-    image:  "/san-valentin/taza-love.jpeg", 
-    price: "Consultar" },
-    // semana santa
-  { id: 7,
-    name: " Franela Camino a la Gloria", 
-    category: 'semana santa', 
-    description: "Colección especial para la Semana Santa.", 
-    image: "/semana-santa/camino a la gloria.jpeg", 
-    price: "Consultar" },
- 
-    { id: 8,
-    name: "El nazareno",  
-    category: 'semana santa',
-    description: "franela con diseño de la Semana Santa.",
-    image: "/semana-santa/el nazareno.jpeg",
-    price: "Consultar" },
- 
-    { id: 9,
-    name: "Franela Semana Santa",
-    category: 'semana santa',
-    description: "Mirada de Fe.",
-    image: "/semana-santa/mirada de fe.jpeg",
-    price: "Consultar" },
-    
-    { id: 10,
-    name: "Colección Especial Semana Santa",
-    category: 'semana santa',
-    description: "Rey de Paz.",
-    image: "/semana-santa/Rey de Paz.jpeg",
-    price: "Consultar" },
-    
-    { id: 11,
-    name: "franela Sacrificio de Amor",
-    category: 'semana santa',
-    description: "Sacrificio de Amor.",
-    image: "/semana-santa/Sacrificio de Amor .jpeg",
-    price: "Consultar" },
- 
-    { id: 12,
-    name: "Franela Semana Santa",
-    category: 'semana santa',
-    description: "Franela con diseño especial de Semana Santa.",
-    image: "/semana-santa/semana santa.jpeg",
-    price: "Consultar" },    
-
+  { id: 1, name: "Taza xoxo san valentín", category: 'tazas', description: "Perfecta para expresar amor con cada sorbo.", image: "/san-valentin/taza-xoxo.png", price: "Consultar" },
+  { id: 2, name: "franela san valentin", category: 'san-valentín', description: "lindos detalles.", image: "/san-valentin/franela-san-valentin.jpeg", price: "Consultar" },
+  { id: 3, name: "Tazas Cerámica san valentín", category: 'san-valentín', description: "Amor en cada sorbo.", image: "/san-valentin/tazas-san-valentin.jpeg", price: "Consultar" },
+  { id: 4, name: "franelas para parejas", category: 'san-valentín', description: "Ideal para aprejas.", image: "/san-valentin/franelas-para-parejas.jpeg", price: "Consultar" },
+  { id: 5, name: "Colección san valentín", category: 'san-valentín', description: "Diseños exclusivos con estética.", image: "/san-valentin/franelas-para-parejas-2.jpeg", price: "Consultar" },
+  { id: 6, name: "Taza love", category: 'tazas', description: "Amor en cada sorbo.", image: "/san-valentin/taza-love.jpeg", price: "Consultar" },
+  { id: 7, name: " Franela Camino a la Gloria", category: 'semana santa', description: "Colección especial para la Semana Santa.", image: "/semana-santa/camino a la gloria.jpeg", price: "Consultar" },
+  { id: 8, name: "El nazareno", category: 'semana santa', description: "franela con diseño de la Semana Santa.", image: "/semana-santa/el nazareno.jpeg", price: "Consultar" },
+  { id: 9, name: "Franela Semana Santa", category: 'semana santa', description: "Mirada de Fe.", image: "/semana-santa/mirada de fe.jpeg", price: "Consultar" },
+  { id: 10, name: "Colección Especial Semana Santa", category: 'semana santa', description: "Rey de Paz.", image: "/semana-santa/Rey de Paz.jpeg", price: "Consultar" },
+  { id: 11, name: "franela Sacrificio de Amor", category: 'semana santa', description: "Sacrificio de Amor.", image: "/semana-santa/Sacrificio de Amor .jpeg", price: "Consultar" },
+  { id: 12, name: "Franela Semana Santa", category: 'semana santa', description: "Franela con diseño especial de Semana Santa.", image: "/semana-santa/semana santa.jpeg", price: "Consultar" },    
 ];
 
-// ---  COMPONENTE DE FONDO: ClawScratches ---
+// --- Shared Components ---
+
 const ClawScratches = ({ className = "" }: { className?: string }) => (
   <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
     <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -163,7 +96,6 @@ const ClawScratches = ({ className = "" }: { className?: string }) => (
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
       </defs>
-      
       <g fill="url(#neonGlow)" filter="url(#glow)" opacity="0.6" className="animate-pulse">
         <path d="M10,25 Q12,28 15,40 L17,65 Q14,50 11,35 Z" transform="rotate(-15 15 45)" />
         <path d="M25,20 Q28,25 32,45 L35,75 Q30,55 26,30 Z" transform="rotate(-15 30 45)" />
@@ -175,7 +107,6 @@ const ClawScratches = ({ className = "" }: { className?: string }) => (
   </div>
 );
 
-// --- Shared Components ---
 const btnBase = "inline-flex items-center justify-center gap-2 font-bold transition-all duration-500 active:scale-95 hover:-translate-y-1 cursor-pointer outline-none overflow-hidden relative group";
 const btnNeon = `${btnBase} bg-gradient-to-r from-emerald-400 via-cyan-400 to-rose-500 text-slate-950 hover:shadow-[0_0_25px_rgba(34,211,238,0.4)]`;
 const btnWhatsApp = `${btnBase} bg-[#25D366] text-white hover:bg-[#20ba5a] shadow-lg shadow-green-500/20`;
@@ -189,118 +120,120 @@ const SectionHeader = ({ title, subtitle, light = false }: { title: string, subt
   </div>
 );
 
+// --- Componente ImageCarousel ---
+const ImageCarousel = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev === CAROUSEL_IMAGES.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev === 0 ? CAROUSEL_IMAGES.length - 1 : prev - 1));
+  };
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="py-12 bg-slate-950 relative overflow-hidden">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-cyan-500/5 blur-[120px] rounded-full"></div>
+      <div className="max-w-6xl mx-auto px-6 relative group z-10">
+        <div className="relative h-[450px] md:h-[650px] w-full overflow-hidden rounded-[3rem] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+          {CAROUSEL_IMAGES.map((img, index) => (
+            <div
+              key={img.id}
+              className={`absolute inset-0 transition-all duration-1000 ease-in-out transform ${
+                index === currentIndex ? "opacity-100 scale-100" : "opacity-0 scale-105"
+              }`}
+            >
+              <img src={img.url} alt={img.title} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-black/20" />
+              <div className={`absolute bottom-12 left-12 transition-all duration-700 delay-300 ${
+                index === currentIndex ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+              }`}>
+              </div>
+            </div>
+          ))}
+          <button onClick={prevSlide} className="absolute left-6 top-1/2 -translate-y-1/2 p-4 rounded-2xl bg-slate-900/60 text-white backdrop-blur-xl border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:bg-cyan-400 hover:text-slate-950 z-30">
+            <ArrowLeft size={24} />
+          </button>
+          <button onClick={nextSlide} className="absolute right-6 top-1/2 -translate-y-1/2 p-4 rounded-2xl bg-slate-900/60 text-white backdrop-blur-xl border border-white/10 opacity-0 group-hover:opacity-100 transition-all hover:bg-cyan-400 hover:text-slate-950 z-30">
+            <ArrowRight size={24} />
+          </button>
+          <div className="absolute bottom-10 right-12 flex gap-2 z-30">
+            {CAROUSEL_IMAGES.map((_, i) => (
+              <button key={i} onClick={() => setCurrentIndex(i)} className={`h-1.5 rounded-full transition-all duration-500 ${i === currentIndex ? "w-10 bg-cyan-400" : "w-3 bg-white/20 hover:bg-white/40"}`} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // --- Pages ---
 
 const HomePage = ({ setPage }: { setPage: (p: Page) => void }) => (
   <div className="animate-in fade-in duration-700 relative">
     <Hero setPage={setPage} />
     
+    {/* INTEGRACIÓN DEL CARRUSEL */}
+    <ImageCarousel />
+
     {/* --- SECCIÓN COLECCIÓN DE TEMPORADA --- */}
-      <section 
-  className="py-12 md:py-24 relative overflow-hidden transition-colors duration-1000"
-  style={{ 
-    backgroundColor: `rgba(15, 23, 42, 1)`, 
-    backgroundImage: `linear-gradient(to bottom, transparent, ${SEASON_CONFIG.accentColor}20)` 
-  }}
->
-  <ClawScratches className="opacity-20 scale-110" />
-  <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-    
-    {/* Banner Superior - Ajuste Dinámico */}
-    <div className="flex items-center gap-2 mb-10 md:mb-16">
-      <div className="h-px flex-1 opacity-30" style={{ backgroundColor: SEASON_CONFIG.accentColor }}></div>
-      <span 
-        className="font-black uppercase flex items-center gap-2 text-center"
-        style={{ 
-          color: SEASON_CONFIG.accentColor,
-          // Texto que escala entre 9px y 12px según el ancho
-          fontSize: 'clamp(9px, 1.5vw, 12px)',
-          letterSpacing: '0.2em'
-        }}
-      >
-        <Sparkles size={14} className="shrink-0" /> Colección Especial: {SEASON_CONFIG.title}
-      </span>
-      <div className="h-px flex-1 opacity-30" style={{ backgroundColor: SEASON_CONFIG.accentColor }}></div>
-    </div>
-    
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-      <div className="text-center lg:text-left">
-        
-        {/* TÍTULO CON TEXTO DINÁMICO */}
-          <h2 
-            className="font-black text-white mb-6 md:mb-8 italic tracking-tighter"
-            style={{ 
-              fontSize: 'clamp(2.4rem, 11vw, 6rem)', 
-              lineHeight: '1.2', // Aumentado de 0.9 a 1.2 para que los acentos no se corten
-              wordBreak: 'break-word',
-              paddingRight: '0.15em', // Espacio vital para la inclinación de la 'N' o la 'Í'
-              paddingLeft: '0.05em',  // Balance simétrico por la inclinación
-              display: 'block'        // Asegura que el padding se aplique correctamente
-            }}
-          >
-            {SEASON_CONFIG.title.split(' ')[0]} <br />
-            <span 
-              className="text-transparent bg-clip-text inline-block" // inline-block es clave aquí
-              style={{ 
-                backgroundImage: `linear-gradient(to right, ${SEASON_CONFIG.accentColor}, #ffffff)`,
-                fontSize: 'clamp(1.8rem, 9vw, 5.5rem)',
-                paddingRight: '0.2em', // Padding extra para el gradiente y la cursiva
-                lineHeight: '1.1'
-              }}
-            >
-              {SEASON_CONFIG.title.split(' ').slice(1).join(' ') || 'DESTACADA'}
-            </span>
-          </h2>
-
-        <p className="text-slate-400 text-sm md:text-xl mb-8 md:mb-10 max-w-md mx-auto lg:mx-0 font-medium leading-relaxed">
-          Diseños exclusivos pensados para esta temporada de {SEASON_CONFIG.title.toLowerCase()}.
-        </p>
-
-        <div className="flex justify-center lg:justify-start">
-          <button 
-            onClick={() => setPage('catalog')}
-            className="text-white px-8 py-4 md:py-5 rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-[0.2em] transition-all transform hover:scale-105 flex items-center gap-3 active:scale-95"
-            style={{ 
-              backgroundColor: SEASON_CONFIG.accentColor,
-              boxShadow: `0 0 30px ${SEASON_CONFIG.accentColor}40` 
-            }}
-          >
-            VER COLECCIÓN <ArrowRight size={18} />
-          </button>
+    <section 
+      className="py-12 md:py-24 relative overflow-hidden transition-colors duration-1000"
+      style={{ 
+        backgroundColor: `rgba(15, 23, 42, 1)`, 
+        backgroundImage: `linear-gradient(to bottom, transparent, ${SEASON_CONFIG.accentColor}20)` 
+      }}
+    >
+      <ClawScratches className="opacity-20 scale-110" />
+      <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+        <div className="flex items-center gap-2 mb-10 md:mb-16">
+          <div className="h-px flex-1 opacity-30" style={{ backgroundColor: SEASON_CONFIG.accentColor }}></div>
+          <span className="font-black uppercase flex items-center gap-2 text-center" style={{ color: SEASON_CONFIG.accentColor, fontSize: 'clamp(9px, 1.5vw, 12px)', letterSpacing: '0.2em' }}>
+            <Sparkles size={14} className="shrink-0" /> Colección Especial: {SEASON_CONFIG.title}
+          </span>
+          <div className="h-px flex-1 opacity-30" style={{ backgroundColor: SEASON_CONFIG.accentColor }}></div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <div className="text-center lg:text-left">
+              <h2 className="font-black text-white mb-6 md:mb-8 italic tracking-tighter" style={{ fontSize: 'clamp(2.4rem, 11vw, 6rem)', lineHeight: '1.2', wordBreak: 'break-word', paddingRight: '0.15em', paddingLeft: '0.05em', display: 'block' }}>
+                {SEASON_CONFIG.title.split(' ')[0]} <br />
+                <span className="text-transparent bg-clip-text inline-block" style={{ backgroundImage: `linear-gradient(to right, ${SEASON_CONFIG.accentColor}, #ffffff)`, fontSize: 'clamp(1.8rem, 9vw, 5.5rem)', paddingRight: '0.2em', lineHeight: '1.1' }}>
+                  {SEASON_CONFIG.title.split(' ').slice(1).join(' ') || 'DESTACADA'}
+                </span>
+              </h2>
+            <p className="text-slate-400 text-sm md:text-xl mb-8 md:mb-10 max-w-md mx-auto lg:mx-0 font-medium leading-relaxed">
+              Diseños exclusivos pensados para esta temporada de {SEASON_CONFIG.title.toLowerCase()}.
+            </p>
+            <div className="flex justify-center lg:justify-start">
+              <button onClick={() => setPage('catalog')} className="text-white px-8 py-4 md:py-5 rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-[0.2em] transition-all transform hover:scale-105 flex items-center gap-3 active:scale-95" style={{ backgroundColor: SEASON_CONFIG.accentColor, boxShadow: `0 0 30px ${SEASON_CONFIG.accentColor}40` }}>
+                VER COLECCIÓN <ArrowRight size={18} />
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 relative max-w-[450px] mx-auto lg:max-w-none">
+            <div className="absolute -inset-4 blur-3xl rounded-full opacity-10" style={{ backgroundColor: SEASON_CONFIG.accentColor }}></div>
+            <div className="aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 relative z-10 group shadow-2xl">
+              <img src={SEASON_CONFIG.image1} alt={SEASON_CONFIG.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+            </div>
+            <div className="aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 relative z-10 mt-8 group shadow-2xl">
+              <img src={SEASON_CONFIG.image2} alt={SEASON_CONFIG.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+            </div>
+          </div>
         </div>
       </div>
-      
-      {/* Visual de Imágenes - Ajustado para no empujar el texto */}
-      <div className="grid grid-cols-2 gap-4 relative max-w-[450px] mx-auto lg:max-w-none">
-        <div className="absolute -inset-4 blur-3xl rounded-full opacity-10" style={{ backgroundColor: SEASON_CONFIG.accentColor }}></div>
-        
-        <div className="aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 relative z-10 group shadow-2xl">
-          <img 
-            src={SEASON_CONFIG.image1} 
-            alt={SEASON_CONFIG.title} 
-            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
-          />
-        </div>
-        
-        <div className="aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 relative z-10 mt-8 group shadow-2xl">
-          <img 
-            src={SEASON_CONFIG.image2} 
-            alt={SEASON_CONFIG.title} 
-            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
     <FeaturedSection setPage={setPage} />
     <Steps />
-
-    {/* --- INTEGRACIÓN DE RESEÑAS --- */}
     <ReviewsSection />
     
-    {/* --- SECCIÓN MARCA LA DIFERENCIA --- */}
     <section className="relative py-16 md:py-32 bg-slate-950 overflow-hidden min-h-[600px] flex items-center justify-center">
       <ClawScratches className="opacity-30 scale-150 rotate-12 translate-x-1/4" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 w-full flex justify-center">
@@ -316,10 +249,7 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void }) => (
               Somos el reflejo de tu personalidad en cada detalle.
             </p>
             <div className="w-full flex justify-center">
-              <button 
-                onClick={() => setPage('catalog')}
-                className={`${btnNeon} w-full sm:w-auto px-8 md:px-20 py-5 md:py-7 rounded-xl md:rounded-3xl text-[10px] md:text-xs uppercase tracking-[0.3em] shadow-2xl transition-all hover:scale-105 active:scale-95`}
-              >
+              <button onClick={() => setPage('catalog')} className={`${btnNeon} w-full sm:w-auto px-8 md:px-20 py-5 md:py-7 rounded-xl md:rounded-3xl text-[10px] md:text-xs uppercase tracking-[0.3em] shadow-2xl transition-all hover:scale-105 active:scale-95`}>
                 Ver catálogo completo
               </button>
             </div>
@@ -339,8 +269,7 @@ const CatalogPage = () => {
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter(p => {
       const matchesFilter = filter === 'todas' || p.category === filter;
-      const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || 
-                           p.description.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.description.toLowerCase().includes(search.toLowerCase());
       return matchesFilter && matchesSearch;
     });
   }, [filter, search]);
@@ -351,28 +280,15 @@ const CatalogPage = () => {
       <SectionHeader title="Catálogo" subtitle="Explora nuestras líneas de productos listas para ser personalizadas." light />
       <div className="flex flex-col md:flex-row gap-6 mb-16 items-center relative z-10">
         <div className="flex flex-wrap gap-2 p-1 bg-white/5 rounded-2xl border border-white/10 w-full md:w-auto">
-              {/* Filtros de categoría */}
           {(['todas', 'tazas', 'camisetas', 'especiales', 'san-valentín', 'semana santa',' calnaval',] as Category[]).map(cat => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                filter === cat ? 'bg-cyan-400 text-slate-950 shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-slate-400 hover:text-white'
-              }`}
-            >
+            <button key={cat} onClick={() => setFilter(cat)} className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${filter === cat ? 'bg-cyan-400 text-slate-950 shadow-[0_0_15px_rgba(34,211,238,0.3)]' : 'text-slate-400 hover:text-white'}`}>
               {cat.replace('-', ' ')}
             </button>
           ))}
         </div>
         <div className="relative flex-1 w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-          <input 
-            type="text" 
-            placeholder="Buscar productos..."
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-6 text-white text-sm outline-none focus:border-cyan-400/50 transition-colors"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <input type="text" placeholder="Buscar productos..." className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-12 pr-6 text-white text-sm outline-none focus:border-cyan-400/50 transition-colors" value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 relative z-10">
@@ -401,8 +317,7 @@ const CatalogPage = () => {
   );
 };
 
-//sobre nosotros page 
-
+// --- About Page ---
 const AboutPage = () => (
   <div className="pt-32 pb-24 animate-in fade-in slide-in-from-bottom-8 duration-700 relative overflow-hidden">
     <ClawScratches className="opacity-20 -rotate-45 scale-150" />
@@ -427,7 +342,7 @@ const AboutPage = () => (
         </div>
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/20 to-cyan-500/20 blur-3xl"></div>
-          <img src="https://images.unsplash.com/photo-1574634534894-89d7576c8259?auto=format&fit=crop&q=80&w=1000" alt="Proceso de sublimación" className="relative z-10 rounded-[3.5rem] border border-white/10 shadow-2xl" />
+          <img src="https://i.ibb.co/YBt3Gz8L/regalos-unicos.jpg" alt="Proceso de sublimación" className="relative z-10 rounded-[3.5rem] border border-white/10 shadow-2xl" />
         </div>
       </div>
     </section>
@@ -465,8 +380,8 @@ const FeaturedSection = ({ setPage }: { setPage: (p: Page) => void }) => (
         </button>
       </div>
       <div className="grid md:grid-cols-2 gap-20">
-        <ProductCard product={PRODUCTS[0]} />
-        <ProductCard product={PRODUCTS[1]} />
+        <ProductCard product={PRODUCTS[2]} />
+        <ProductCard product={PRODUCTS[4]} />
       </div>
     </div>
   </section>
@@ -507,7 +422,6 @@ const Steps = () => (
 const ReviewsSection = () => (
   <section className="py-24 bg-slate-950 relative overflow-hidden">
     <ClawScratches className="opacity-10 -scale-x-100 translate-y-1/2" />
-    
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <div className="text-center mb-16">
         <h2 className="text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4">
@@ -518,23 +432,13 @@ const ReviewsSection = () => (
           {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
         </div>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {REVIEWS.map((review) => (
-          <div 
-            key={review.id} 
-            className="bg-slate-900/40 backdrop-blur-md border border-white/5 p-8 rounded-[2rem] hover:border-cyan-400/30 transition-all group"
-          >
+          <div key={review.id} className="bg-slate-900/40 backdrop-blur-md border border-white/5 p-8 rounded-[2rem] hover:border-cyan-400/30 transition-all group">
             <div className="flex gap-1 mb-4 text-cyan-400">
-              {[...Array(review.stars)].map((_, i) => (
-                <Star key={i} size={14} fill="currentColor" />
-              ))}
+              {[...Array(review.stars)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
             </div>
-            
-            <p className="text-slate-300 italic mb-6 leading-relaxed">
-              "{review.content}"
-            </p>
-            
+            <p className="text-slate-300 italic mb-6 leading-relaxed">"{review.content}"</p>
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-rose-500 flex items-center justify-center font-black text-slate-950 text-xs">
                 {review.name[0]}
@@ -565,8 +469,6 @@ const CTASection = () => (
     </div>
   </section>
 );
-
-
 
 // --- Navbar ---
 const Navbar = ({ currentPage, setPage }: { currentPage: Page, setPage: (p: Page) => void }) => (
@@ -633,47 +535,55 @@ const Footer = ({ setPage }: { setPage: (p: Page) => void }) => (
           </div>
           <div className="flex flex-col">
             <span className="font-black text-2xl tracking-tighter text-white uppercase">N&C</span>
-            <span className="text-cyan-400 text-[10px] font-black tracking-[0.3em] uppercase">Studio</span>
+            <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-rose-500 bg-clip-text text-transparent font-black text-xs uppercase tracking-widest">SUBLIMACION</span>
           </div>
         </div>
-        <p className="text-lg leading-relaxed font-medium text-slate-500 uppercase tracking-tight">Tú lo imaginas, nosotros lo creamos.</p>
       </div>
-      <div>
-        <h4 className="text-white font-black text-xs mb-10 tracking-[0.4em] uppercase">Mapa</h4>
-        <ul className="space-y-4">
-          <li><button onClick={() => setPage('home')} className="hover:text-white transition-colors uppercase tracking-widest text-[10px] font-black">Inicio</button></li>
-          <li><button onClick={() => setPage('catalog')} className="hover:text-white transition-colors uppercase tracking-widest text-[10px] font-black">Catálogo</button></li>
-          <li><button onClick={() => setPage('about')} className="hover:text-white transition-colors uppercase tracking-widest text-[10px] font-black">Nosotros</button></li>
-        </ul>
+      <div className="grid grid-cols-2 gap-10">
+        <div className="space-y-6">
+          <h4 className="text-white font-black uppercase tracking-widest text-xs">Explorar</h4>
+          <ul className="space-y-4 text-sm font-bold">
+            <li><button onClick={() => setPage('home')} className="hover:text-white transition-colors">Inicio</button></li>
+            <li><button onClick={() => setPage('catalog')} className="hover:text-white transition-colors">Catálogo</button></li>
+            <li><button onClick={() => setPage('about')} className="hover:text-white transition-colors">Nosotros</button></li>
+          </ul>
+        </div>
+        <div className="space-y-6">
+          <h4 className="text-white font-black uppercase tracking-widest text-xs">Legal</h4>
+          <ul className="space-y-4 text-sm font-bold">
+            <li><a href="#" className="hover:text-white transition-colors">Términos</a></li>
+            <li><a href="#" className="hover:text-white transition-colors">Envíos</a></li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h4 className="text-white font-black text-xs mb-10 tracking-[0.4em] uppercase">Contacto</h4>
-        <a href={WA_URL} target="_blank" rel="noreferrer" className="text-sm font-medium leading-loose text-slate-500 hover:text-cyan-400 transition-colors uppercase tracking-widest">Enviar WhatsApp</a>
+      <div className="space-y-8">
+        <h4 className="text-white font-black uppercase tracking-widest text-xs">Ubicación</h4>
+        <p className="text-sm font-bold leading-relaxed">Espino,<br />Estado Guárico, Venezuela.</p>
+        <div className="pt-8 border-t border-white/5">
+          <p className="text-[10px] font-black uppercase tracking-[0.3em]">© 2026 N&C Sublimaciones</p>
+        </div>
       </div>
-    </div>
-    <div className="max-w-7xl mx-auto px-6 mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-black tracking-[0.5em] text-slate-800 uppercase relative z-10">
-      <span>&copy; {new Date().getFullYear()} N&C SUBLIMACIÓN</span>
-      <span>ALL RIGHTS RESERVED</span>
     </div>
   </footer>
 );
 
+// --- Main App Component ---
 export default function App() {
-  const [page, setPage] = useState<Page>('home');
-  const handleSetPage = (p: Page) => {
-    setPage(p);
+  const [currentPage, setPage] = useState<Page>('home');
+
+  useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, [currentPage]);
 
   return (
-    <div className="min-h-screen selection:bg-cyan-400 selection:text-slate-950 bg-slate-950 font-['Poppins']">
-      <Navbar currentPage={page} setPage={handleSetPage} />
+    <div className="min-h-screen bg-slate-950 font-['Poppins'] selection:bg-cyan-400 selection:text-slate-950">
+      <Navbar currentPage={currentPage} setPage={setPage} />
       <main>
-        {page === 'home' && <HomePage setPage={handleSetPage} />}
-        {page === 'catalog' && <CatalogPage />}
-        {page === 'about' && <AboutPage />}
+        {currentPage === 'home' && <HomePage setPage={setPage} />}
+        {currentPage === 'catalog' && <CatalogPage />}
+        {currentPage === 'about' && <AboutPage />}
       </main>
-      <Footer setPage={handleSetPage} />
+      <Footer setPage={setPage} />
     </div>
   );
 }
