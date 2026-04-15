@@ -25,11 +25,12 @@ const WA_URL = `https://wa.me/${WA_NUMBER}`;
 
 // --- Imágenes del Carrusel ---
 const CAROUSEL_IMAGES = [
-  { id: 1, url: "/logos-NC/nc.jpeg", title: "nc sublimaciones" },
-  { id: 2, url: "/logos-NC/nc-tazas.jpeg", title: "nc tazas" },
-  { id: 3, url: "/logos-NC/regalos-unicos.jpeg", title: "regalos unicos" },
-];
+ 
+   { id: 1, url: "/logos-NC/nc-tazas.jpeg", title: "nc tazas" }, 
+   { id: 2, url: "/logos-NC/regalos-unicos.jpeg", title: "regalos unicos" },
+   { id: 3, url: "/logos-NC/nc.jpeg", title: "nc sublimaciones" },
 
+];
 // --- Tipado y Datos ---
 interface Review {
   id: number;
@@ -46,7 +47,7 @@ const REVIEWS: Review[] = [
 ];
 
 type Page = 'home' | 'catalog' | 'about';
-type Category = 'todas' | 'tazas' | 'camisetas' | 'especiales' | 'san-valentín' | 'semana santa'| ' calnaval';
+type Category = 'todas' | 'tazas' | 'camisetas' | 'especiales' | 'san-valentín' | 'semana santa'|'dia de las madres';
 
 interface Product {
   id: number;
@@ -58,11 +59,11 @@ interface Product {
 }
 
 const SEASON_CONFIG = {
-  title: "SEMANA SANTA",
-  accentColor: "purple",
-  image1: "/semana-santa/Rey de Paz.jpeg", 
-  image2: "/semana-santa/semana santa.jpeg",
-  category: "semana santa"
+  title: "Dia de las Madres",
+  accentColor: "#f43f5e",
+  image1: "/dia-de-las-madres/lazos-mama.jpeg", 
+  image2: "/dia-de-las-madres/feliz-dia-de-la-madre.jpeg",
+  category: "dia de las madres"
 };
 
 const PRODUCTS: Product[] = [
@@ -78,6 +79,26 @@ const PRODUCTS: Product[] = [
   { id: 10, name: "Colección Especial Semana Santa", category: 'semana santa', description: "Rey de Paz.", image: "/semana-santa/Rey de Paz.jpeg", price: "Consultar" },
   { id: 11, name: "franela Sacrificio de Amor", category: 'semana santa', description: "Sacrificio de Amor.", image: "/semana-santa/Sacrificio de Amor .jpeg", price: "Consultar" },
   { id: 12, name: "Franela Semana Santa", category: 'semana santa', description: "Franela con diseño especial de Semana Santa.", image: "/semana-santa/semana santa.jpeg", price: "Consultar" },    
+  //colecion dia de las madres
+  {id: 13, name: "franela dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/corazon-de-mama.jpeg", price: "Consultar" },
+  {id: 14, name: "taza dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/feliz-dia-de-la-madre.jpeg", price: "Consultar" },
+  {id: 15, name: "taza personalizada dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/feliz-dia-mama.jpeg", price: "Consultar" },
+  {id: 16, name: "taza personalizada dia de las madres", category: 'dia de las madres', description: "gracias mamá.", image: "/dia-de-las-madres/gracias-mama.jpeg", price: "Consultar" },
+  {id: 17, name: "franela personalizada dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/la-mejor-mama.jpeg", price: "Consultar" },
+  {id: 18, name: "franela personalizada dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/lazos-mama.jpeg", price: "Consultar" },
+  {id: 19, name: "llavero dia de las madres", category: 'dia de las madres', description: "llavero con diseño de dia de las madres.", image: "/dia-de-las-madres/llavero-dia-de-las-madres.jpeg", price: "Consultar" },
+  {id: 20, name: "llavero dia de las madres", category: 'dia de las madres', description: "llavero con diseño de dia de las madres.", image: "/dia-de-las-madres/llavero-feliz-dia-mama.jpeg", price: "Consultar" },
+  {id: 21, name: "llavero dia de las madres", category: 'dia de las madres', description: "llaveros.", image: "/dia-de-las-madres/llaveros.jpeg", price: "Consultar" },
+  {id: 22, name: "taza personalizada dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/lo-mejor-de-tenerte.jpeg", price: "Consultar" },
+  {id: 23, name: "franela personalizada dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/madre-y-abuela.jpeg", price: "Consultar" },
+  {id: 24, name: "franela personalizada dia de las madres", category: 'dia de las madres', description: "mama bendecida.", image: "/dia-de-las-madres/mama-bendecida.jpeg", price: "Consultar" },
+  {id: 25, name: "franela personalizada dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/mama-bonita.jpeg", price: "Consultar" },
+  {id: 26, name: "franela personalizada dia de las madres", category: 'dia de las madres', description: "Personalizada con el diseño que quieras.", image: "/dia-de-las-madres/mama.jpeg", price: "Consultar" }, 
+  {id: 27, name: "taza personalizada ", category: 'tazas', description: "regalos personalizados.", image: "/dia-de-las-madres/regalo-para mama.jpeg", price: "Consultar" },  
+  {id: 28, name: "taza personalizada dia de las madres", category: 'dia de las madres', description: "regalos personalizados.", image: "/dia-de-las-madres/taza-la-mejor-mama.jpeg", price: "Consultar" },
+  {id: 29, name: "taza personalizada dia de las madres", category: 'dia de las madres', description: "taza personalizada.", image: "/dia-de-las-madres/taza-unidos-mama.jpeg", price: "Consultar" },
+  {id: 30, name: "regalo personalizado dia de las madres", category: 'dia de las madres', description: "regalos personalizados.", image: "/dia-de-las-madres/un-regalo-para-mama.jpeg", price: "Consultar" },
+
 ];
 
 // --- Shared Components ---
@@ -369,6 +390,8 @@ const Hero = ({ setPage }: { setPage: (p: Page) => void }) => (
   </section>
 );  
 
+// --- destacados Products Section ---
+
 const FeaturedSection = ({ setPage }: { setPage: (p: Page) => void }) => (
   <section className="py-32 px-6 bg-slate-950 relative overflow-hidden">
     <ClawScratches className="left-auto right-0 rotate-90 opacity-15 scale-125" />
@@ -380,6 +403,10 @@ const FeaturedSection = ({ setPage }: { setPage: (p: Page) => void }) => (
         </button>
       </div>
       <div className="grid md:grid-cols-2 gap-20">
+        <ProductCard product={PRODUCTS[22]} />
+        <ProductCard product={PRODUCTS[19]} />
+        <ProductCard product={PRODUCTS[20]} />
+        <ProductCard product={PRODUCTS[28]} />
         <ProductCard product={PRODUCTS[2]} />
         <ProductCard product={PRODUCTS[4]} />
       </div>
